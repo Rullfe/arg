@@ -3,16 +3,18 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔴</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             user-select: none;
+            box-sizing: border-box;
         }
         body {
             background: #000;
-            color: #990000;
+            color: #ff2222;
             font-family: serif;
             min-height: 100vh;
             overflow: hidden;
@@ -26,7 +28,7 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.08;
+            opacity: 0.12;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
         .container {
@@ -38,12 +40,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding:20px;
         }
         .ghost-text {
-            font-size: 32px;
+            font-size: clamp(36px,10vw,64px);
             animation: flicker 0.12s infinite;
             text-align: center;
             line-height: 2.4;
+            color:#ff2626;
+            text-shadow: 0 0 12px #ff0000;
         }
         @keyframes flicker {
             0% {opacity:1;}
@@ -53,10 +58,11 @@
         }
         .float {
             position: absolute;
-            color: #440000;
-            font-size:15px;
+            color: #ff4444;
+            font-size: clamp(18px,4vw,26px);
             z-index:2;
             animation: floatMove 14s infinite linear;
+            text-shadow:0 0 6px #ff0000;
         }
         @keyframes floatMove{
             0%{transform: translateY(100vh);}
@@ -67,7 +73,7 @@
             width: 180px;
             height: 180px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(20,0,0,0.7) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(40,0,0,0.85) 0%, transparent 70%);
             pointer-events: none;
             z-index:3;
             transform: translate(-50%,-50%);
@@ -78,10 +84,11 @@
             left:50%;
             transform: translate(-50%,-50%);
             background:#000;
-            border:2px solid #770000;
-            padding:30px 50px;
-            font-size:26px;
-            color:#bb0000;
+            border:3px solid #ff2222;
+            padding:40px 30px;
+            font-size: clamp(28px,7vw,48px);
+            color:#ff2222;
+            text-shadow:0 0 10px red;
             z-index:10;
             display:none;
             animation: popFlicker 0.08s infinite;
@@ -95,6 +102,7 @@
 <body>
 <audio id="bgMusic" loop preload="auto">
     <source src="horror.mp3" type="audio/mpeg">
+
 <div class="noise"></div>
 <div class="shadow-cursor"></div>
 <div class="pop" id="popBox">你看到我了...</div>
@@ -119,7 +127,7 @@ document.addEventListener('mousemove',(e)=>{
     document.body.style.opacity = 0.82 + Math.random()*0.18;
 })
 
-const wordList = ["别盯着屏幕","听得到吗","靠近一点","不要闭眼","它在看你","别转动你的头","呼吸轻一点"];
+const wordList = ["别盯着屏幕","听得到吗","靠近一点","不要闭眼","它在看你","别转动你的头","呼吸轻一点","我们在看着你"];
 function createFloat(){
     const div = document.createElement('div');
     div.className = "float";
