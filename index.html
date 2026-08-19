@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="UTF-8">
+    <title>🔴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        body {
+            background: #000;
+            color: #990000;
+            font-family: serif;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .ghost-text {
+            font-size: 32px;
+            animation: flicker 0.12s infinite;
+            text-align: center;
+            line-height: 2.4;
+        }
+        @keyframes flicker {
+            0% {opacity:1;}
+            30% {opacity:0.1;}
+            60% {opacity:0.7;}
+            100% {opacity:1;}
+        }
+        .float {
+            position: absolute;
+            color: #440000;
+            font-size:15px;
+            z-index:2;
+            animation: floatMove 14s infinite linear;
+        }
+        @keyframes floatMove{
+            0%{transform: translateY(100vh);}
+            100%{transform: translateY(-120px);}
+        }
+        .shadow-cursor{
+            position: fixed;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(20,0,0,0.7) 0%, transparent 70%);
+            pointer-events: none;
+            z-index:3;
+            transform: translate(-50%,-50%);
+        }
+        .pop{
+            position: fixed;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            background:#000;
+            border:2px solid #770000;
+            padding:30px 50px;
+            font-size:26px;
+            color:#bb0000;
+            z-index:10;
+            display:none;
+            animation: popFlicker 0.08s infinite;
+        }
+        @keyframes popFlicker{
+            0%{opacity:1}
+            50%{opacity:0.2}
+        }
+    </style>
+</head>
+<body>
+<audio id="bgMusic" loop preload="auto">
+    <source src="horror.mp3" type="audio/mpeg">
+<div class="noise"></div>
+<div class="shadow-cursor"></div>
+<div class="pop" id="popBox">你看到我了...</div>
+
+<div class="container">
+    <div class="ghost-text">
+        你很聪明<br>
+        但这只是刚刚开始...
+    </div>
+</div>
+
+<script>
+const audio = document.getElementById('bgMusic');
+document.body.addEventListener('click', ()=>{
+    audio.volume = 0.35;
+    audio.play();
+},{once:true});
+const shadow = document.querySelector('.shadow-cursor');
+document.addEventListener('mousemove',(e)=>{
+    shadow.style.left = e.clientX + 'px';
+    shadow.style.top = e.clientY + 'px';
+    document.body.style.opacity = 0.82 + Math.random()*0.18;
+})
+
+const wordList = ["别盯着屏幕","听得到吗","靠近一点","不要闭眼","它在看你","别转动你的头","呼吸轻一点"];
+function createFloat(){
+    const div = document.createElement('div');
+    div.className = "float";
+    div.innerText = wordList[Math.floor(Math.random()*wordList.length)];
+    div.style.left = Math.random()*90 + "%";
+    div.style.animationDuration = (Math.random()*9+7)+"s";
+    document.body.appendChild(div);
+    setTimeout(()=>div.remove(),16000);
+}
+setInterval(createFloat,1000);
+
+const pop = document.getElementById("popBox");
+function showPop(){
+    pop.style.display = "block";
+    setTimeout(()=>{pop.style.display="none"},1800);
+}
+setInterval(()=>{
+    if(Math.random()>0.65) showPop();
+},6000);
+</script>
+</body>
+</html>
