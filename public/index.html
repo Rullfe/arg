@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔴</title>
@@ -40,69 +39,72 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding:20px;
+            padding: 20px;
         }
         .ghost-text {
-            font-size: clamp(36px,10vw,64px);
+            font-size: clamp(36px, 10vw, 64px);
             animation: flicker 0.12s infinite;
             text-align: center;
             line-height: 2.4;
-            color:#ff2626;
+            color: #ff2626;
             text-shadow: 0 0 12px #ff0000;
         }
         @keyframes flicker {
-            0% {opacity:1;}
-            30% {opacity:0.1;}
-            60% {opacity:0.7;}
-            100% {opacity:1;}
+            0% { opacity: 1; }
+            30% { opacity: 0.1; }
+            60% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
         .float {
             position: absolute;
             color: #ff4444;
-            font-size: clamp(18px,4vw,26px);
-            z-index:2;
-            animation: floatMove 14s infinite linear;
-            text-shadow:0 0 6px #ff0000;
+            font-size: clamp(18px, 4vw, 26px);
+            z-index: 2;
+            animation: floatMove linear forwards;
+            text-shadow: 0 0 6px #ff0000;
+            top: 100%;
         }
-        @keyframes floatMove{
-            0%{transform: translateY(100vh);}
-            100%{transform: translateY(-120px);}
+        @keyframes floatMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(calc(-100vh - 120px)); }
         }
-        .shadow-cursor{
+        .shadow-cursor {
             position: fixed;
             width: 180px;
             height: 180px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(40,0,0,0.85) 0%, transparent 70%);
             pointer-events: none;
-            z-index:3;
-            transform: translate(-50%,-50%);
+            z-index: 3;
+            transform: translate(-50%, -50%);
+            left: -999px;
+            top: -999px;
         }
-        .pop{
+        .pop {
             position: fixed;
-            top:50%;
-            left:50%;
-            transform: translate(-50%,-50%);
-            background:#000;
-            border:3px solid #ff2222;
-            padding:40px 30px;
-            font-size: clamp(28px,7vw,48px);
-            color:#ff2222;
-            text-shadow:0 0 10px red;
-            z-index:10;
-            display:none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 3px solid #ff2222;
+            padding: 40px 30px;
+            font-size: clamp(28px, 7vw, 48px);
+            color: #ff2222;
+            text-shadow: 0 0 10px red;
+            z-index: 10;
+            display: none;
             animation: popFlicker 0.08s infinite;
         }
-        @keyframes popFlicker{
-            0%{opacity:1}
-            50%{opacity:0.2}
+        @keyframes popFlicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
         }
     </style>
 </head>
 <body>
 <audio id="bgMusic" loop preload="auto">
     <source src="horror.mp3" type="audio/mpeg">
-
+</audio>
 
 <div class="noise"></div>
 <div class="shadow-cursor"></div>
@@ -117,37 +119,44 @@
 
 <script>
 const audio = document.getElementById('bgMusic');
-document.body.addEventListener('click', ()=>{
+document.body.addEventListener('click', () => {
     audio.volume = 0.35;
-    audio.play();
-},{once:true});
+    audio.play().catch(() => {});
+}, { once: true });
+
 const shadow = document.querySelector('.shadow-cursor');
-document.addEventListener('mousemove',(e)=>{
+document.addEventListener('mousemove', (e) => {
     shadow.style.left = e.clientX + 'px';
     shadow.style.top = e.clientY + 'px';
-    document.body.style.opacity = 0.82 + Math.random()*0.18;
-})
+});
 
-const wordList = ["别盯着屏幕","听得到吗","靠近一点","不要闭眼","它在看你","别转动你的头","呼吸轻一点","我们在看着你"];
-function createFloat(){
+const wordList = ["别盯着屏幕", "听得到吗", "靠近一点", "不要闭眼", "它在看你", "别转动你的头", "呼吸轻一点", "我们在看着你"];
+function createFloat() {
     const div = document.createElement('div');
     div.className = "float";
-    div.innerText = wordList[Math.floor(Math.random()*wordList.length)];
-    div.style.left = Math.random()*90 + "%";
-    div.style.animationDuration = (Math.random()*9+7)+"s";
+    div.innerText = wordList[Math.floor(Math.random() * wordList.length)];
+    div.style.left = Math.random() * 90 + "%";
+    const duration = Math.random() * 9 + 7;
+    div.style.animationDuration = duration + "s";
     document.body.appendChild(div);
-    setTimeout(()=>div.remove(),16000);
+    setTimeout(() => div.remove(), duration * 1000);
 }
-setInterval(createFloat,1000);
+setInterval(createFloat, 1000);
 
 const pop = document.getElementById("popBox");
-function showPop(){
+let popShowing = false;
+function showPop() {
+    if (popShowing) return;
+    popShowing = true;
     pop.style.display = "block";
-    setTimeout(()=>{pop.style.display="none"},1800);
+    setTimeout(() => {
+        pop.style.display = "none";
+        popShowing = false;
+    }, 1800);
 }
-setInterval(()=>{
-    if(Math.random()>0.65) showPop();
-},6000);
+setInterval(() => {
+    if (Math.random() > 0.65) showPop();
+}, 6000);
 </script>
 </body>
 </html>
